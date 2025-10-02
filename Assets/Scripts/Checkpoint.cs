@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArchController : BaseController<ArchController>
+public class Checkpoint : BaseController<Checkpoint>
 {
     public bool isPassed = false;
 

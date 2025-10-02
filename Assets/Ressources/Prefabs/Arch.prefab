@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1258589967228540330}
   - component: {fileID: 2799184519683906063}
   - component: {fileID: 89021085027724997}
-  - component: {fileID: 7847944484297054210}
+  - component: {fileID: 6495698202431280560}
   - component: {fileID: 6428279943517581733}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Arch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7847944484297054210
+--- !u!64 &6495698202431280560
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

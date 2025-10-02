@@ -11,12 +11,10 @@ public class GameController : BaseController<GameController>
 
     [Header("Checkpoint Settings")]
     public GameObject[] arches;
-    public float displayInterval = 10f;
 
     private float currentTime = 0f;
     private bool timerRunning;
     private int currentArchIndex = 0;
-    private float nextArchTime;
 
     void Start()
     {
@@ -42,38 +40,34 @@ public class GameController : BaseController<GameController>
                 arch.SetActive(false);
             }
         }
+
         if (arches.Length > 0 && arches[0] != null)
         {
             arches[0].SetActive(true);
             currentArchIndex = 0;
-            nextArchTime = displayInterval;
         }
     }
 
     private void UpdateArches()
     {
-        if (currentArchIndex < arches.Length - 1 && currentTime >= nextArchTime)
+        if (currentArchIndex < arches.Length)
         {
-            if (arches[currentArchIndex] != null)
-            {
-                arches[currentArchIndex].SetActive(false);
-            }
-            currentArchIndex++;
-            if (arches[currentArchIndex] != null)
-            {
-                arches[currentArchIndex].SetActive(true);
-                Debug.Log($"Arche {currentArchIndex} affichée"); // Debug log
-            }
-            nextArchTime += displayInterval;
-        }
+            Checkpoint cp = arches[currentArchIndex].GetComponent<Checkpoint>();
 
-        if (currentArchIndex == arches.Length - 1 && currentTime >= nextArchTime)
-        {
-            if (arches[currentArchIndex] != null && arches[currentArchIndex].activeSelf)
+            if (cp != null && cp.isPassed)
             {
                 arches[currentArchIndex].SetActive(false);
-                Debug.Log($"Dernière arche {currentArchIndex} désactivée"); // Debug log
-                StopTimer();
+                currentArchIndex++;
+
+                if (currentArchIndex < arches.Length)
+                {
+                    arches[currentArchIndex].SetActive(true);
+                    Debug.Log($"Arche {currentArchIndex} activée"); // Debug log
+                }
+                else
+                {
+                    StopTimer();
+                }
             }
         }
     }
@@ -109,38 +103,12 @@ public class GameController : BaseController<GameController>
         if (timerRunning)
         {
             timerRunning = false;
-
             if (timerText != null)
             {
                 int minutes = Mathf.FloorToInt(currentTime / 60f);
                 int seconds = Mathf.FloorToInt(currentTime % 60f);
                 timerText.text = string.Format("Bravo ! Temps final : {0} min {1:00} sec", minutes, seconds);
             }
-        }
-    }
-
-    public void ShowNextArch()
-    {
-        if (currentArchIndex < arches.Length - 1)
-        {
-            if (arches[currentArchIndex] != null)
-            {
-                arches[currentArchIndex].SetActive(false);
-            }
-
-            currentArchIndex++;
-            if (arches[currentArchIndex] != null)
-            {
-                arches[currentArchIndex].SetActive(true);
-            }
-        }
-    }
-
-    public void HideCurrentArch()
-    {
-        if (arches[currentArchIndex] != null)
-        {
-            arches[currentArchIndex].SetActive(false);
         }
     }
 }
