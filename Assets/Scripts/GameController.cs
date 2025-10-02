@@ -42,7 +42,6 @@ public class GameController : BaseController<GameController>
                 arch.SetActive(false);
             }
         }
-
         if (arches.Length > 0 && arches[0] != null)
         {
             arches[0].SetActive(true);
@@ -59,14 +58,12 @@ public class GameController : BaseController<GameController>
             {
                 arches[currentArchIndex].SetActive(false);
             }
-
             currentArchIndex++;
             if (arches[currentArchIndex] != null)
             {
                 arches[currentArchIndex].SetActive(true);
                 Debug.Log($"Arche {currentArchIndex} affichée"); // Debug log
             }
-
             nextArchTime += displayInterval;
         }
 
