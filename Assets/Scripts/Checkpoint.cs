@@ -6,9 +6,10 @@ public class Checkpoint : BaseController<Checkpoint>
 {
     public bool isPassed = false;
 
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
+
         {
             isPassed = true;
             Debug.Log("Voiture a traversé l’arche !"); // Debug log
