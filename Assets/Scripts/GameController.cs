@@ -5,17 +5,15 @@ using TMPro;
 
 public class GameController : BaseController<GameController>
 {
-    [Header("Timer Settings")]
-    public float startTime = 300f;
-
     [Header("UI References")]
     public TextMeshProUGUI timerText;
+    public bool showTimer = true;
 
     [Header("Checkpoint Settings")]
     public GameObject[] arches;
     public float displayInterval = 10f;
 
-    private float currentTime;
+    private float currentTime = 0f;
     private bool timerRunning;
     private int currentArchIndex = 0;
     private float nextArchTime;
@@ -50,13 +48,12 @@ public class GameController : BaseController<GameController>
             arches[0].SetActive(true);
             currentArchIndex = 0;
             nextArchTime = displayInterval;
-            Debug.Log("Arche 0 affichée");
         }
     }
 
     private void UpdateArches()
     {
-        if (currentArchIndex < arches.Length - 1 && currentTime <= (startTime - nextArchTime))
+        if (currentArchIndex < arches.Length - 1 && currentTime >= nextArchTime)
         {
             if (arches[currentArchIndex] != null)
             {
@@ -67,54 +64,60 @@ public class GameController : BaseController<GameController>
             if (arches[currentArchIndex] != null)
             {
                 arches[currentArchIndex].SetActive(true);
-                Debug.Log($"Arche {currentArchIndex} affichée");
+                Debug.Log($"Arche {currentArchIndex} affichée"); // Debug log
             }
 
             nextArchTime += displayInterval;
+        }
+
+        if (currentArchIndex == arches.Length - 1 && currentTime >= nextArchTime)
+        {
+            if (arches[currentArchIndex] != null && arches[currentArchIndex].activeSelf)
+            {
+                arches[currentArchIndex].SetActive(false);
+                Debug.Log($"Dernière arche {currentArchIndex} désactivée"); // Debug log
+                StopTimer();
+            }
         }
     }
 
     private void InitializeTimer()
     {
-        currentTime = startTime;
         timerRunning = true;
         UpdateTimerDisplay();
     }
 
     private void UpdateTimer()
     {
-        if (currentTime > 0)
-        {
-            currentTime -= Time.deltaTime;
-            UpdateTimerDisplay();
-        }
-        else
-        {
-            currentTime = 0;
-            timerRunning = false;
-            OnTimerEnd();
-        }
+        currentTime += Time.deltaTime;
+        UpdateTimerDisplay();
     }
 
     private void UpdateTimerDisplay()
     {
         if (timerText != null)
         {
-            int minutes = Mathf.FloorToInt(currentTime / 60f);
-            int seconds = Mathf.FloorToInt(currentTime % 60f);
-            timerText.text = string.Format("Timer : {0}:{1:00}", minutes, seconds);
+            timerText.gameObject.SetActive(showTimer);
+            if (showTimer)
+            {
+                int minutes = Mathf.FloorToInt(currentTime / 60f);
+                int seconds = Mathf.FloorToInt(currentTime % 60f);
+                timerText.text = string.Format("Timer : {0}:{1:00}", minutes, seconds);
+            }
         }
     }
 
-    private void OnTimerEnd()
+    private void StopTimer()
     {
-        Debug.Log("Time Over!");
-        
-        foreach (GameObject arch in arches)
+        if (timerRunning)
         {
-            if (arch != null)
+            timerRunning = false;
+
+            if (timerText != null)
             {
-                arch.SetActive(false);
+                int minutes = Mathf.FloorToInt(currentTime / 60f);
+                int seconds = Mathf.FloorToInt(currentTime % 60f);
+                timerText.text = string.Format("Bravo ! Temps final : {0} min {1:00} sec", minutes, seconds);
             }
         }
     }
@@ -132,13 +135,15 @@ public class GameController : BaseController<GameController>
             if (arches[currentArchIndex] != null)
             {
                 arches[currentArchIndex].SetActive(true);
-                Debug.Log($"Arche {currentArchIndex} affichée (manuel)");
             }
         }
     }
 
-    public int GetCurrentArchIndex()
+    public void HideCurrentArch()
     {
-        return currentArchIndex;
+        if (arches[currentArchIndex] != null)
+        {
+            arches[currentArchIndex].SetActive(false);
+        }
     }
 }
