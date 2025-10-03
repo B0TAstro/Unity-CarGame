@@ -82,6 +82,9 @@ Maîtriser le drift, parcourir le circuit efficacement et obtenir le meilleur sc
 
 1. Cloner le dépôt :  
    ```bash
-   git clone <URL_DU_DEPOT>```
+   git clone https://github.com/B0TAstro/Unity-CarGame```
 2. Ouvrir le projet dans Unity 2022.
 3. Lancer la scène IntroScene.unity pour commencer le jeu.
+
+
+PS : Le build ne fonctionne pas correctement (le switch de scene vers le selectCar et le Quit ne fonctionne pas), lancer directement dans Unity pour tester ses features
