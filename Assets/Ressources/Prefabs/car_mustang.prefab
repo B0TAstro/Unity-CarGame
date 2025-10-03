@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 2959467708922500008, guid: 2c403376ef1fe604d8de45d141d39b07, type: 3}
     - target: {fileID: 2899677038362036582, guid: b9d1fb0db2993423ca18e8a0e09b5436, type: 3}
       propertyPath: m_Name
-      value: car_mustang Variant
+      value: car_mustang
       objectReference: {fileID: 0}
     - target: {fileID: 2997634614353132379, guid: b9d1fb0db2993423ca18e8a0e09b5436, type: 3}
       propertyPath: m_LocalPosition.z
