@@ -12,6 +12,11 @@ public class GameController : BaseController<GameController>
     [Header("Checkpoint Settings")]
     public GameObject[] arches;
 
+    [Header("Audio Settings")]
+    public AudioClip raceMusic;
+    public AudioClip victoryMusic;
+    private AudioSource audioSource;
+
     private float currentTime = 0f;
     private bool timerRunning;
     private int currentArchIndex = 0;
@@ -20,6 +25,7 @@ public class GameController : BaseController<GameController>
     {
         InitializeTimer();
         InitializeArches();
+        InitializeAudio();
     }
 
     void Update()
@@ -67,6 +73,7 @@ public class GameController : BaseController<GameController>
                 else
                 {
                     StopTimer();
+                    PlayVictoryMusic();
                 }
             }
         }
@@ -109,6 +116,28 @@ public class GameController : BaseController<GameController>
                 int seconds = Mathf.FloorToInt(currentTime % 60f);
                 timerText.text = string.Format("Bravo ! Temps final : {0} min {1:00} sec", minutes, seconds);
             }
+        }
+    }
+
+    private void InitializeAudio()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.loop = true;
+        if (raceMusic != null)
+        {
+            audioSource.clip = raceMusic;
+            audioSource.Play();
+        }
+    }
+
+    private void PlayVictoryMusic()
+    {
+        if (audioSource != null && victoryMusic != null)
+        {
+            audioSource.Stop();
+            audioSource.loop = false;
+            audioSource.clip = victoryMusic;
+            audioSource.Play();
         }
     }
 }
