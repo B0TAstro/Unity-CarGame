@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class CarController : MonoBehaviour
 {
@@ -19,7 +18,7 @@ public class CarController : MonoBehaviour
       // private float steeringSpeed = 0.5f; // How fast the steering wheel turns.
       
       // [Range(100, 600)]
-      private int brakeForce = 400; // The strength of the wheel brakes.
+      private int brakeForce = 450; // The strength of the wheel brakes.
       // [Range(1, 10)]
       private int decelerationMultiplier = 1; // How fast the car decelerates when the user is not using the throttle.
       // [Range(1, 10)]
@@ -56,6 +55,13 @@ public class CarController : MonoBehaviour
       public float carSpeed; // Used to store the speed of the car.
       [HideInInspector]
       public bool isDrifting; // Used to know whether the car is drifting or not.
+      
+      //SOUNDS
+      [Space(10)]
+      public bool useSounds = false;
+      public AudioSource carEngineSound; // This variable stores the sound of the car engine.
+      public AudioSource tireScreechSound; // This variable stores the sound of the tire screech (when the car is drifting).
+      float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
 
     //PRIVATE VARIABLES
 
@@ -123,6 +129,22 @@ public class CarController : MonoBehaviour
         RRwheelFriction.asymptoteSlip = backRightCollider.sidewaysFriction.asymptoteSlip;
         RRwheelFriction.asymptoteValue = backRightCollider.sidewaysFriction.asymptoteValue;
         RRwheelFriction.stiffness = backRightCollider.sidewaysFriction.stiffness;
+        
+        // We save the initial pitch of the car engine sound.
+        if(carEngineSound != null){
+          initialCarEngineSoundPitch = carEngineSound.pitch;
+        }
+
+        if (useSounds) {
+          InvokeRepeating("CarSounds", 0f, 0.1f);
+        } else if(!useSounds){
+          if(carEngineSound != null){
+            carEngineSound.Stop();
+          }
+          if(tireScreechSound != null){
+            tireScreechSound.Stop();
+          }
+        }
 
     }
 
@@ -163,7 +185,8 @@ public class CarController : MonoBehaviour
       if (Input.GetKey(KeyCode.Space))
       {
         CancelInvoke("DecelerateCar"); 
-        deceleratingCar = false; 
+        deceleratingCar = false;
+        Debug.Log("Handbrake");
         Handbrake();
       } 
       if(Input.GetKeyUp(KeyCode.Space))
@@ -199,6 +222,37 @@ public class CarController : MonoBehaviour
       AnimateWheelMeshes();
       CheckDrift();
 
+    }
+    
+    // This method controls the car sounds. For example, the car engine will sound slow when the car speed is low because the
+    // pitch of the sound will be at its lowest point. On the other hand, it will sound fast when the car speed is high because
+    // the pitch of the sound will be the sum of the initial pitch + the car speed divided by 100f.
+    // Apart from that, the tireScreechSound will play whenever the car starts drifting or losing traction.
+    public void CarSounds(){
+      if (useSounds) {
+        try{
+          if(carEngineSound != null){
+            float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(carRigidbody.velocity.magnitude) / 25f);
+            carEngineSound.pitch = engineSoundPitch;
+          }
+          if(isDrifting){
+            if(!tireScreechSound.isPlaying){
+              tireScreechSound.Play();
+            }
+          }else if(!isDrifting){
+            tireScreechSound.Stop();
+          }
+        }catch(Exception ex){
+          Debug.LogWarning(ex);
+        }
+      } else if(!useSounds){
+        if(carEngineSound != null && carEngineSound.isPlaying){
+          carEngineSound.Stop();
+        }
+        if(tireScreechSound != null && tireScreechSound.isPlaying){
+          tireScreechSound.Stop();
+        }
+      }
     }
 
     //
