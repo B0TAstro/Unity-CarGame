@@ -37,6 +37,12 @@ public class GeneralController : BaseController<GeneralController>
         }
         ApplyDayNightCycle();
     }
+    
+    public void NightDayToggle()
+    {
+        isNight = !isNight;
+        ApplyDayNightCycle();
+    }
 
     private void ApplyDayNightCycle()
     {

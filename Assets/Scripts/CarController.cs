@@ -63,7 +63,7 @@ public class CarController : MonoBehaviour
       public AudioSource tireScreechSound; // This variable stores the sound of the tire screech (when the car is drifting).
       float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
 
-    //PRIVATE VARIABLES
+      //PRIVATE VARIABLES
 
       /*
       IMPORTANT: The following variables should not be modified manually since their values are automatically given via script.
@@ -88,6 +88,13 @@ public class CarController : MonoBehaviour
       float RLWextremumSlip;
       WheelFrictionCurve RRwheelFriction;
       float RRWextremumSlip;
+      
+      // PAUSE SYSTEM
+      private bool isPaused = false;
+      private Vector3 savedVelocity;
+      private Vector3 savedAngularVelocity;
+      private float savedThrottleAxis;
+      private float savedSteeringAxis;
 
     // Start is called before the first frame update
     void Start()
@@ -97,39 +104,12 @@ public class CarController : MonoBehaviour
       //in the inspector.
       carRigidbody = gameObject.GetComponent<Rigidbody>();
       carRigidbody.centerOfMass = bodyMassCenter;
-
+      
       //Initial setup to calculate the drift value of the car. This part could look a bit
       //complicated, but do not be afraid, the only thing we're doing here is to save the default
       //friction values of the car wheels so we can set an appropiate drifting value later.
-      FLwheelFriction = new WheelFrictionCurve ();
-        FLwheelFriction.extremumSlip = frontLeftCollider.sidewaysFriction.extremumSlip;
-        FLWextremumSlip = frontLeftCollider.sidewaysFriction.extremumSlip;
-        FLwheelFriction.extremumValue = frontLeftCollider.sidewaysFriction.extremumValue;
-        FLwheelFriction.asymptoteSlip = frontLeftCollider.sidewaysFriction.asymptoteSlip;
-        FLwheelFriction.asymptoteValue = frontLeftCollider.sidewaysFriction.asymptoteValue;
-        FLwheelFriction.stiffness = frontLeftCollider.sidewaysFriction.stiffness;
-      FRwheelFriction = new WheelFrictionCurve ();
-        FRwheelFriction.extremumSlip = frontRightCollider.sidewaysFriction.extremumSlip;
-        FRWextremumSlip = frontRightCollider.sidewaysFriction.extremumSlip;
-        FRwheelFriction.extremumValue = frontRightCollider.sidewaysFriction.extremumValue;
-        FRwheelFriction.asymptoteSlip = frontRightCollider.sidewaysFriction.asymptoteSlip;
-        FRwheelFriction.asymptoteValue = frontRightCollider.sidewaysFriction.asymptoteValue;
-        FRwheelFriction.stiffness = frontRightCollider.sidewaysFriction.stiffness;
-      RLwheelFriction = new WheelFrictionCurve ();
-        RLwheelFriction.extremumSlip = backLeftCollider.sidewaysFriction.extremumSlip;
-        RLWextremumSlip = backLeftCollider.sidewaysFriction.extremumSlip;
-        RLwheelFriction.extremumValue = backLeftCollider.sidewaysFriction.extremumValue;
-        RLwheelFriction.asymptoteSlip = backLeftCollider.sidewaysFriction.asymptoteSlip;
-        RLwheelFriction.asymptoteValue = backLeftCollider.sidewaysFriction.asymptoteValue;
-        RLwheelFriction.stiffness = backLeftCollider.sidewaysFriction.stiffness;
-      RRwheelFriction = new WheelFrictionCurve ();
-        RRwheelFriction.extremumSlip = backRightCollider.sidewaysFriction.extremumSlip;
-        RRWextremumSlip = backRightCollider.sidewaysFriction.extremumSlip;
-        RRwheelFriction.extremumValue = backRightCollider.sidewaysFriction.extremumValue;
-        RRwheelFriction.asymptoteSlip = backRightCollider.sidewaysFriction.asymptoteSlip;
-        RRwheelFriction.asymptoteValue = backRightCollider.sidewaysFriction.asymptoteValue;
-        RRwheelFriction.stiffness = backRightCollider.sidewaysFriction.stiffness;
-        
+      InitializeWheelFriction();
+      
         // We save the initial pitch of the car engine sound.
         if(carEngineSound != null){
           initialCarEngineSoundPitch = carEngineSound.pitch;
@@ -146,11 +126,91 @@ public class CarController : MonoBehaviour
           }
         }
 
+        if (GameController.Instance != null)
+        {
+          GameController.Instance.OnTogglePause += HandlePause;
+        }
+    }
+    
+    void OnDestroy()
+    {
+      // Se désabonner pour éviter les fuites mémoire
+      if (GameController.Instance != null)
+      {
+        GameController.Instance.OnTogglePause -= HandlePause;
+      }
+    }
+    
+    private void InitializeWheelFriction()
+    {
+        FLwheelFriction = new WheelFrictionCurve();
+        FLwheelFriction.extremumSlip = frontLeftCollider.sidewaysFriction.extremumSlip;
+        FLWextremumSlip = frontLeftCollider.sidewaysFriction.extremumSlip;
+        FLwheelFriction.extremumValue = frontLeftCollider.sidewaysFriction.extremumValue;
+        FLwheelFriction.asymptoteSlip = frontLeftCollider.sidewaysFriction.asymptoteSlip;
+        FLwheelFriction.asymptoteValue = frontLeftCollider.sidewaysFriction.asymptoteValue;
+        FLwheelFriction.stiffness = frontLeftCollider.sidewaysFriction.stiffness;
+
+        FRwheelFriction = new WheelFrictionCurve();
+        FRwheelFriction.extremumSlip = frontRightCollider.sidewaysFriction.extremumSlip;
+        FRWextremumSlip = frontRightCollider.sidewaysFriction.extremumSlip;
+        FRwheelFriction.extremumValue = frontRightCollider.sidewaysFriction.extremumValue;
+        FRwheelFriction.asymptoteSlip = frontRightCollider.sidewaysFriction.asymptoteSlip;
+        FRwheelFriction.asymptoteValue = frontRightCollider.sidewaysFriction.asymptoteValue;
+        FRwheelFriction.stiffness = frontRightCollider.sidewaysFriction.stiffness;
+
+        RLwheelFriction = new WheelFrictionCurve();
+        RLwheelFriction.extremumSlip = backLeftCollider.sidewaysFriction.extremumSlip;
+        RLWextremumSlip = backLeftCollider.sidewaysFriction.extremumSlip;
+        RLwheelFriction.extremumValue = backLeftCollider.sidewaysFriction.extremumValue;
+        RLwheelFriction.asymptoteSlip = backLeftCollider.sidewaysFriction.asymptoteSlip;
+        RLwheelFriction.asymptoteValue = backLeftCollider.sidewaysFriction.asymptoteValue;
+        RLwheelFriction.stiffness = backLeftCollider.sidewaysFriction.stiffness;
+
+        RRwheelFriction = new WheelFrictionCurve();
+        RRwheelFriction.extremumSlip = backRightCollider.sidewaysFriction.extremumSlip;
+        RRWextremumSlip = backRightCollider.sidewaysFriction.extremumSlip;
+        RRwheelFriction.extremumValue = backRightCollider.sidewaysFriction.extremumValue;
+        RRwheelFriction.asymptoteSlip = backRightCollider.sidewaysFriction.asymptoteSlip;
+        RRwheelFriction.asymptoteValue = backRightCollider.sidewaysFriction.asymptoteValue;
+        RRwheelFriction.stiffness = backRightCollider.sidewaysFriction.stiffness;
+    }
+    
+    private void HandlePause()
+    {
+      if (GameController.Instance != null)
+      {
+        isPaused = GameController.Instance.IsPaused();
+
+        if (isPaused)
+        {
+          // Sauvegarder l'état de la voiture
+          savedVelocity = carRigidbody.velocity;
+          savedAngularVelocity = carRigidbody.angularVelocity;
+          savedThrottleAxis = throttleAxis;
+          savedSteeringAxis = steeringAxis;
+
+          // Arrêter complètement la voiture
+          carRigidbody.velocity = Vector3.zero;
+          carRigidbody.angularVelocity = Vector3.zero;
+          carRigidbody.Sleep();
+        }
+        else
+        {
+          // Restaurer l'état de la voiture
+          carRigidbody.WakeUp();
+          carRigidbody.velocity = savedVelocity;
+          carRigidbody.angularVelocity = savedAngularVelocity;
+          throttleAxis = savedThrottleAxis;
+          steeringAxis = savedSteeringAxis;
+        }
+      }
     }
 
     // Update is called once per frame
     void Update()
     {
+      if (isPaused) return;
       // We determine the speed of the car.
       carSpeed = (2 * Mathf.PI * frontLeftCollider.radius * frontLeftCollider.rpm * 60) / 1000;
       // Save the local velocity of the car in the x axis. Used to know if the car is drifting.
