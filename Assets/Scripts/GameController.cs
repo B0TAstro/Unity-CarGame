@@ -16,16 +16,39 @@ public class GameController : BaseController<GameController>
     public AudioClip raceMusic;
     public AudioClip victoryMusic;
     private AudioSource audioSource;
+    
+    [Header("Pause Settings")]
+    public GameObject pauseMenu;
+    private bool isPaused = false;
 
     private float currentTime = 0f;
     private bool timerRunning;
     private int currentArchIndex = 0;
+    
+    public delegate void EmptyEvent();
+    public EmptyEvent OnTogglePause;
+    public EmptyEvent OnToggleDayNight;
 
     void Start()
     {
         InitializeTimer();
         InitializeArches();
         InitializeAudio();
+        
+        // Connecter les événements UI
+        if (UIController.Instance != null)
+        {
+            UIController.Instance.OnUIPauseToggle += TogglePause;
+            UIController.Instance.DayNightCycleButton.onClick.AddListener(() => {
+                ToggleDayNight();
+            });
+        }
+
+        // Connecter le clavier
+        if (InputController.Instance != null)
+        {
+            InputController.Instance.OnInputPauseToggle += TogglePause;
+        }
     }
 
     void Update()
@@ -139,5 +162,29 @@ public class GameController : BaseController<GameController>
             audioSource.clip = victoryMusic;
             audioSource.Play();
         }
+    }
+    
+    public void TogglePause()
+    {
+        isPaused = !isPaused;
+        if (pauseMenu != null)
+            pauseMenu.SetActive(isPaused);
+
+        if (OnTogglePause != null)
+            OnTogglePause.Invoke();
+    }
+
+    public bool IsPaused()
+    {
+        return isPaused;
+    }
+
+    public void ToggleDayNight()
+    {
+        if (GeneralController.Instance != null)
+            GeneralController.Instance.NightDayToggle();
+
+        if (OnToggleDayNight != null)
+            OnToggleDayNight.Invoke();
     }
 }
