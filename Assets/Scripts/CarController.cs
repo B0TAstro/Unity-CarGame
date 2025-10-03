@@ -272,7 +272,7 @@ public class CarController : MonoBehaviour
 
       if (this.preset.name == "Bus")
       {
-        if (Input.GetKey(KeyCode.Return))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
           resetBus();
         }
