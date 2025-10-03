@@ -12,6 +12,22 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 7429108794089598297, guid: 028724a65b499cd4ebfc30add6eb1bde, type: 3}
+    - target: {fileID: 368169124211644695, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_Range
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 368169124211644695, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 368169124211644695, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 368169124211644695, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 604897334006369531, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -40,14 +56,38 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1470878260243043546, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_Range
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1470878260243043546, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1470878260243043546, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1470878260243043546, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1997958960230001695, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 6037406925835679199, guid: 8a43f2b797d14054e8ff9e19f7e8d9cc, type: 3}
+    - target: {fileID: 2130061918544761058, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.712
+      objectReference: {fileID: 0}
+    - target: {fileID: 2130061918544761058, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.78
+      objectReference: {fileID: 0}
     - target: {fileID: 2331309722949244060, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
       propertyPath: preset
       value: 
-      objectReference: {fileID: 11400000, guid: c953565f5884a40838d19e296f1af1a2, type: 2}
+      objectReference: {fileID: 11400000, guid: 9fee93b53c3c64a079472c1a02cc03cc, type: 2}
     - target: {fileID: 2836746800355752192, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -63,6 +103,14 @@ PrefabInstance:
     - target: {fileID: 3642655860315408767, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657611801793193265, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.712
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657611801793193265, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.78
       objectReference: {fileID: 0}
     - target: {fileID: 3850849102274633230, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
       propertyPath: m_Mesh
@@ -95,6 +143,10 @@ PrefabInstance:
     - target: {fileID: 5134986989253464322, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5144526718045293791, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.165
       objectReference: {fileID: 0}
     - target: {fileID: 5428905987300550362, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
       propertyPath: m_Layer

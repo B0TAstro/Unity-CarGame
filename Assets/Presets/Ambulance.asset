@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c26ea0e29473144c189e4156d90a5bc6, type: 3}
-  m_Name: Car
+  m_Name: Ambulance
   m_EditorClassIdentifier: 
-  maxSpeed: 120
-  accelerationMultiplier: 5
-  handbrakeDriftMultiplier: 5
-  steeringSpeed: 0.5
+  maxSpeed: 90
+  accelerationMultiplier: 4
+  handbrakeDriftMultiplier: 4
+  steeringSpeed: 0.4
   VehiclePrefab: {fileID: 0}

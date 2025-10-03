@@ -17,5 +17,9 @@ public class VehiclesPreset : ScriptableObject
     [Range(1, 10)]
     public int handbrakeDriftMultiplier = 5;
     
+    [Tooltip("How fast the steering wheel turns")]
+    [Range(0.1f, 1f)]
+    public float steeringSpeed = 0.5f;
+    
     public GameObject VehiclePrefab; // The prefab of the car.
 }
