@@ -256,7 +256,7 @@ public class CarController : MonoBehaviour
         Vector3 FRWPosition;
         frontRightCollider.GetWorldPose(out FRWPosition, out FRWRotation);
         frontRightMesh.transform.position = FRWPosition;
-        if (this.preset.name != "Bus")
+        if (this.preset.name != "Bus" && this.preset.name != "Mustang")
           frontRightMesh.transform.rotation = FRWRotation * Quaternion.Euler(0, 180, 0);
         else
           frontRightMesh.transform.rotation = FRWRotation;
@@ -271,7 +271,7 @@ public class CarController : MonoBehaviour
         Vector3 BRWPosition;
         backRightCollider.GetWorldPose(out BRWPosition, out BRWRotation);
         backRightMesh.transform.position = BRWPosition;
-        if (this.preset.name != "Bus")
+        if (this.preset.name != "Bus" && this.preset.name != "Mustang")
           backRightMesh.transform.rotation = BRWRotation * Quaternion.Euler(0, 180, 0);
         else
           backRightMesh.transform.rotation = BRWRotation;
