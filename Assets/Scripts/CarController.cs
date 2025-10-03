@@ -16,12 +16,12 @@ public class CarController : MonoBehaviour
       // [Range(10, 45)]
       private int maxSteeringAngle = 27; // The maximum angle that the tires can reach while rotating the steering wheel.
       // [Range(0.1f, 1f)]
-      private float steeringSpeed = 0.5f; // How fast the steering wheel turns.
+      // private float steeringSpeed = 0.5f; // How fast the steering wheel turns.
       
       // [Range(100, 600)]
-      private int brakeForce = 350; // The strength of the wheel brakes.
+      private int brakeForce = 400; // The strength of the wheel brakes.
       // [Range(1, 10)]
-      private int decelerationMultiplier = 2; // How fast the car decelerates when the user is not using the throttle.
+      private int decelerationMultiplier = 1; // How fast the car decelerates when the user is not using the throttle.
       // [Range(1, 10)]
       // public int handbrakeDriftMultiplier = 5; // How much grip the car loses when the user hit the handbrake.
       [Space(10)]
@@ -187,6 +187,14 @@ public class CarController : MonoBehaviour
         ResetSteeringAngle();
       }
 
+      if (this.preset.name == "Bus")
+      {
+        if (Input.GetKey(KeyCode.Return))
+        {
+          resetBus();
+        }
+      }
+      
       // We call the method AnimateWheelMeshes() in order to match the wheel collider movements with the 3D meshes of the wheels.
       AnimateWheelMeshes();
       CheckDrift();
@@ -199,40 +207,40 @@ public class CarController : MonoBehaviour
 
     //The following method turns the front car wheels to the left. The speed of this movement will depend on the steeringSpeed variable.
     public void TurnLeft(){
-      steeringAxis = steeringAxis - (Time.deltaTime * 10f * steeringSpeed);
+      steeringAxis = steeringAxis - (Time.deltaTime * 10f * this.preset.steeringSpeed);
       if(steeringAxis < -1f){
         steeringAxis = -1f;
       }
       var steeringAngle = steeringAxis * maxSteeringAngle;
-      frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
-      frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
+      frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, this.preset.steeringSpeed);
+      frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, this.preset.steeringSpeed);
     }
 
     //The following method turns the front car wheels to the right. The speed of this movement will depend on the steeringSpeed variable.
     public void TurnRight(){
-      steeringAxis = steeringAxis + (Time.deltaTime * 10f * steeringSpeed);
+      steeringAxis = steeringAxis + (Time.deltaTime * 10f * this.preset.steeringSpeed);
       if(steeringAxis > 1f){
         steeringAxis = 1f;
       }
       var steeringAngle = steeringAxis * maxSteeringAngle;
-      frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
-      frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
+      frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, this.preset.steeringSpeed);
+      frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, this.preset.steeringSpeed);
     }
 
     //The following method takes the front car wheels to their default position (rotation = 0). The speed of this movement will depend
     // on the steeringSpeed variable.
     public void ResetSteeringAngle(){
       if(steeringAxis < 0f){
-        steeringAxis = steeringAxis + (Time.deltaTime * 10f * steeringSpeed);
+        steeringAxis = steeringAxis + (Time.deltaTime * 10f * this.preset.steeringSpeed);
       }else if(steeringAxis > 0f){
-        steeringAxis = steeringAxis - (Time.deltaTime * 10f * steeringSpeed);
+        steeringAxis = steeringAxis - (Time.deltaTime * 10f * this.preset.steeringSpeed);
       }
       if(Mathf.Abs(frontLeftCollider.steerAngle) < 1f){
         steeringAxis = 0f;
       }
       var steeringAngle = steeringAxis * maxSteeringAngle;
-      frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
-      frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
+      frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, this.preset.steeringSpeed);
+      frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, this.preset.steeringSpeed);
     }
 
     // This method matches both the position and rotation of the WheelColliders with the WheelMeshes.
@@ -248,7 +256,10 @@ public class CarController : MonoBehaviour
         Vector3 FRWPosition;
         frontRightCollider.GetWorldPose(out FRWPosition, out FRWRotation);
         frontRightMesh.transform.position = FRWPosition;
-        frontRightMesh.transform.rotation = FRWRotation * Quaternion.Euler(0, 180, 0);;
+        if (this.preset.name != "Bus")
+          frontRightMesh.transform.rotation = FRWRotation * Quaternion.Euler(0, 180, 0);
+        else
+          frontRightMesh.transform.rotation = FRWRotation;
 
         Quaternion BLWRotation;
         Vector3 BLWPosition;
@@ -260,7 +271,10 @@ public class CarController : MonoBehaviour
         Vector3 BRWPosition;
         backRightCollider.GetWorldPose(out BRWPosition, out BRWRotation);
         backRightMesh.transform.position = BRWPosition;
-        backRightMesh.transform.rotation = BRWRotation * Quaternion.Euler(0, 180, 0);;
+        if (this.preset.name != "Bus")
+          backRightMesh.transform.rotation = BRWRotation * Quaternion.Euler(0, 180, 0);
+        else
+          backRightMesh.transform.rotation = BRWRotation;
       }catch(Exception ex){
         Debug.LogWarning(ex);
       }
@@ -302,8 +316,6 @@ public class CarController : MonoBehaviour
           backRightCollider.motorTorque = (this.preset.accelerationMultiplier * 50f) * throttleAxis;
         }else {
           // If the maxSpeed has been reached, then stop applying torque to the wheels.
-          // IMPORTANT: The maxSpeed variable should be considered as an approximation; the speed of the car
-          // could be a bit higher than expected.
     			frontLeftCollider.motorTorque = 0;
     			frontRightCollider.motorTorque = 0;
           backLeftCollider.motorTorque = 0;
@@ -344,8 +356,6 @@ public class CarController : MonoBehaviour
           backRightCollider.motorTorque = (this.preset.accelerationMultiplier * 50f) * throttleAxis;
         }else {
           //If the maxReverseSpeed has been reached, then stop applying torque to the wheels.
-          // IMPORTANT: The maxReverseSpeed variable should be considered as an approximation; the speed of the car
-          // could be a bit higher than expected.
     			frontLeftCollider.motorTorque = 0;
     			frontRightCollider.motorTorque = 0;
           backLeftCollider.motorTorque = 0;
@@ -487,6 +497,12 @@ public class CarController : MonoBehaviour
 
         driftingAxis = 0f;
       }
+    }
+
+    private void resetBus()
+    {
+      // Transform the position of the bus (reset the z rotation to 0)
+      transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0f);
     }
 
     private void CheckDrift()

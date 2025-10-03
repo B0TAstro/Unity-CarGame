@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 80
   accelerationMultiplier: 4
-  handbrakeDriftMultiplier: 8
-  VehiclesPrefab: {fileID: 0}
+  handbrakeDriftMultiplier: 2
+  steeringSpeed: 0.1
+  VehiclePrefab: {fileID: 0}
