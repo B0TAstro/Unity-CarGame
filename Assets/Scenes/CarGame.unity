@@ -529,6 +529,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: car_ambulance
       objectReference: {fileID: 0}
+    - target: {fileID: 8731283652883025452, guid: b7058fb4909ee4c3db924bcc7a338baf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -633,7 +637,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 796299528330190127, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 796299528330190127, guid: 4a6ae347a53b346af8c93591e1bf5b56, type: 3}
       propertyPath: m_TagString
