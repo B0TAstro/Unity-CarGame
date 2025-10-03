@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c26ea0e29473144c189e4156d90a5bc6, type: 3}
   m_Name: Mustang
   m_EditorClassIdentifier: 
-  maxSpeed: 120
-  accelerationMultiplier: 6
+  maxSpeed: 160
+  accelerationMultiplier: 8
   handbrakeDriftMultiplier: 5
   steeringSpeed: 0.5
   VehiclePrefab: {fileID: 0}
