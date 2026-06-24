@@ -33,6 +33,9 @@ public class SelectController : MonoBehaviour
         if (mainCamera == null)
             mainCamera = Camera.main;
 
+        // Démarre sur le véhicule déjà choisi (sauvegardé dans GameManager)
+        InitIndexFromSavedVehicle();
+
         if (cameraPositions.Length > 0)
             mainCamera.transform.position = cameraPositions[currentIndex];
 
@@ -74,6 +77,28 @@ public class SelectController : MonoBehaviour
                 isTransitioning = false;
             }
         }
+    }
+
+    private void InitIndexFromSavedVehicle()
+    {
+        if (GameManager.Instance == null || vehiclePrefabs.Length == 0)
+            return;
+
+        string saved = GameManager.Instance.selectedVehicleName;
+        for (int i = 0; i < vehiclePrefabs.Length; i++)
+        {
+            if (vehiclePrefabs[i] != null && vehiclePrefabs[i].name == saved)
+            {
+                currentIndex = i;
+                break;
+            }
+        }
+
+        // Garde l'index valide pour les positions caméra
+        if (cameraPositions.Length > 0)
+            currentIndex = Mathf.Clamp(currentIndex, 0, cameraPositions.Length - 1);
+
+        onVehicleChanged?.Invoke(currentIndex);
     }
 
     public void SelectNext()

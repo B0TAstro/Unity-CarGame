@@ -21,6 +21,10 @@ public class GeneralController : BaseController<GeneralController>
 
     void Start()
     {
+        // Reprend l'état nuit/jour sauvegardé entre les scènes
+        if (GameManager.Instance != null)
+            isNight = GameManager.Instance.isNight;
+
         ApplyDayNightCycle();
     }
 
@@ -33,6 +37,8 @@ public class GeneralController : BaseController<GeneralController>
             {
                 cycleTimer = 0f;
                 isNight = !isNight;
+                if (GameManager.Instance != null)
+                    GameManager.Instance.isNight = isNight;
             }
         }
         ApplyDayNightCycle();
@@ -41,6 +47,8 @@ public class GeneralController : BaseController<GeneralController>
     public void NightDayToggle()
     {
         isNight = !isNight;
+        if (GameManager.Instance != null)
+            GameManager.Instance.isNight = isNight;
         ApplyDayNightCycle();
     }
 

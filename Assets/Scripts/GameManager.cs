@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour
     [Header("Selected Vehicle")]
     public string selectedVehicleName = "car_bus";
 
+    [Header("Day/Night (persisté entre les scènes)")]
+    public bool isNight = false;
+
     [Header("Scene Indices")]
     public int introSceneIndex = 0;
     public int selectCarSceneIndex = 2;
@@ -20,9 +23,17 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else
+        else if (Instance != this)
         {
-            Destroy(gameObject);
+            // Une instance persiste déjà (ex: venant de l'Intro). On reprend
+            // sa sélection puis on la remplace par l'instance de cette scène,
+            // afin que les boutons du menu (référencés dans la scène) restent
+            // liés à un objet vivant. Sinon les clics ne font rien.
+            selectedVehicleName = Instance.selectedVehicleName;
+            isNight = Instance.isNight;
+            Destroy(Instance.gameObject);
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
     }
 
