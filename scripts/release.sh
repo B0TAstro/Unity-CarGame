@@ -1,10 +1,18 @@
+#!/usr/bin/env bash
 set -euo pipefail
 
-# --- 1. Valider la version passée en argument (le tag EST la version) ---
-VERSION="${1:-}"
+# --- 1. Lire les arguments : version (obligatoire) + --dry-run (optionnel) ---
+VERSION=""
+DRY_RUN=false
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) DRY_RUN=true ;;
+    *)         VERSION="$arg" ;;
+  esac
+done
 if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "❌ Version manquante ou invalide."
-  echo "   Usage : $0 vMAJEUR.MINEUR.PATCH   (ex: $0 v1.0.0)"
+  echo "   Usage : $0 vMAJEUR.MINEUR.PATCH [--dry-run]   (ex: $0 v1.0.0)"
   exit 1
 fi
 
@@ -27,16 +35,16 @@ for d in "$WIN_DIR" "$MAC_DIR"; do
   fi
 done
 
-# --- 4. Vérifier que gh est connecté ---
-if ! gh auth status >/dev/null 2>&1; then
-  echo "❌ gh n'est pas connecté. Lance d'abord : gh auth login"
-  exit 1
-fi
-
-# --- 5. Vérifier que le tag n'existe pas déjà ---
-if gh release view "$VERSION" >/dev/null 2>&1; then
-  echo "❌ La release '$VERSION' existe déjà. Choisis une autre version."
-  exit 1
+# --- 4. Vérifs GitHub (ignorées en --dry-run) ---
+if [[ "$DRY_RUN" == false ]]; then
+  if ! gh auth status >/dev/null 2>&1; then
+    echo "❌ gh n'est pas connecté. Lance d'abord : gh auth login"
+    exit 1
+  fi
+  if gh release view "$VERSION" >/dev/null 2>&1; then
+    echo "❌ La release '$VERSION' existe déjà. Choisis une autre version."
+    exit 1
+  fi
 fi
 
 # --- 6. Glisser le guide joueur dans chaque build, puis zipper ---
@@ -49,7 +57,14 @@ echo "📦 Compression du build Windows…"
 echo "📦 Compression du build macOS…"
 ( cd "$MAC_DIR" && zip -rq "$MAC_ZIP" . -x "*.DS_Store" )
 
-# --- 7. Créer la release (gh crée le tag sur la branche par défaut) ---
+# --- 7. Publier (ou s'arrêter là en --dry-run) ---
+if [[ "$DRY_RUN" == true ]]; then
+  echo "🧪 [dry-run] Zips prêts, aucune release créée :"
+  ls -lh "$WIN_ZIP" "$MAC_ZIP"
+  echo "   Pour publier pour de vrai : $0 $VERSION"
+  exit 0
+fi
+
 echo "🚀 Publication de la release $VERSION…"
 gh release create "$VERSION" \
   --title "Need for Drift $VERSION" \
