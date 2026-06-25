@@ -7,7 +7,7 @@ Need for Drift is a drift-racing game: pick your car, drift around the track, an
 ### Windows
 
 1. Unzip `NeedForDrift-Windows.zip`.
-2. Open the extracted folder.
+2. Open the extracted `NeedForDrift` folder.
 3. Run `Need for Drift.exe`.
 
 > Keep every file together: the `.exe` needs the `Need for Drift_Data` folder right next to it.
@@ -15,11 +15,11 @@ Need for Drift is a drift-racing game: pick your car, drift around the track, an
 ### macOS
 
 1. Unzip `NeedForDrift-macOS.zip`.
-2. **Right-click** `Need for Drift.app` → **Open** (the app isn't signed, so macOS asks for confirmation the first time).
+2. **Right-click** `NeedForDrift.app` → **Open** (the app isn't signed, so macOS asks for confirmation the first time).
 
 > If macOS still refuses to open it, run this once in the Terminal:
 > ```bash
-> xattr -dr com.apple.quarantine "Need for Drift.app"
+> xattr -dr com.apple.quarantine "NeedForDrift.app"
 > ```
 
 ## Controls

@@ -60,8 +60,6 @@ Build from `File → Build Settings`:
 
 `Builds/` is git-ignored — **never commit build output**. Distribute builds through GitHub Releases by zipping the **whole** build folder (the executable needs its data folder and libraries), not just the executable.
 
-> ⚠️ Known bug: from a build, the *Select Car* scene switch and the *Quit* button don't work correctly yet. Use the Unity editor to test every feature.
-
 ## Releasing
 
 Releases are published manually from local builds — the **git tag is the version** (no CI, no extra config).
