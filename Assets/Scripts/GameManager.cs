@@ -18,23 +18,27 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
+        // "Latest-wins" volontaire : les scènes Intro et CarGame ont chacune
+        // leur propre GameManager, câblé à leurs boutons dans l'Inspector.
+        // On garde donc l'instance de la scène courante et on reprend l'état
+        // de l'ancienne, sinon les boutons pointeraient vers un objet détruit
+        // (les clics ne feraient rien).
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (Instance != this)
-        {
-            // Une instance persiste déjà (ex: venant de l'Intro). On reprend
-            // sa sélection puis on la remplace par l'instance de cette scène,
-            // afin que les boutons du menu (référencés dans la scène) restent
-            // liés à un objet vivant. Sinon les clics ne font rien.
-            selectedVehicleName = Instance.selectedVehicleName;
-            isNight = Instance.isNight;
+            CarryOverStateFrom(Instance);
             Destroy(Instance.gameObject);
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    // Reprend l'état qui doit survivre aux changements de scène.
+    // ⚠️ Tout nouveau champ persistant doit être recopié ici.
+    private void CarryOverStateFrom(GameManager previous)
+    {
+        selectedVehicleName = previous.selectedVehicleName;
+        isNight = previous.isNight;
     }
 
     private void OnEnable()
