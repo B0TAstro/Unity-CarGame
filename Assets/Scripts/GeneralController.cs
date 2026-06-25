@@ -30,18 +30,19 @@ public class GeneralController : BaseController<GeneralController>
 
     void Update()
     {
-        if (autoCycle)
+        if (!autoCycle)
+            return;
+
+        cycleTimer += Time.deltaTime;
+        if (cycleTimer >= cycleDuration)
         {
-            cycleTimer += Time.deltaTime;
-            if (cycleTimer >= cycleDuration)
-            {
-                cycleTimer = 0f;
-                isNight = !isNight;
-                if (GameManager.Instance != null)
-                    GameManager.Instance.isNight = isNight;
-            }
+            cycleTimer = 0f;
+            isNight = !isNight;
+            if (GameManager.Instance != null)
+                GameManager.Instance.isNight = isNight;
+            // On applique uniquement au moment de la bascule, pas chaque frame.
+            ApplyDayNightCycle();
         }
-        ApplyDayNightCycle();
     }
     
     public void NightDayToggle()
